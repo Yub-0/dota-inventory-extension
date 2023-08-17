@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "Dota Extension",
+  "name": "__MSG_application_title__",
   "short_name": "Dota Extension",
   "version": "1.0.0",
   "default_locale": "en",
-  "description": "Dota Extension",
+  "description": "__MSG_application_description__",
   "permissions": [
     "storage",
     "notifications",
