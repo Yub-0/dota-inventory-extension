@@ -1,0 +1,74 @@
+{
+  "application_title": {
+    "message": "Dota Extension",
+    "description": "The title of the application, displayed in the web store."
+  },
+  "application_description": {
+    "message": "View the total value of your dota 2 inventory.",
+    "description": "The description of the application, displayed in the web store. It's character limited (132 or less)"
+  },
+  "webstore_description": {
+    "message": "A simple extension to view the total price of your dota inventory.",
+    "description": "The long description of the application as visible in it's Chrome Webstore page"
+  },
+  "inspect_in_browser": {
+    "message": "Inspect in Browser...",
+    "description": "Text for the buttons that open in-browser inspection"
+  },
+  "fn_long": {
+    "message": "Factory New",
+    "description": "Factory New"
+  },
+  "mw_long": {
+    "message": "Minimal Wear",
+    "description": "Minimal Wear"
+  },
+  "ft_long": {
+    "message": "Field-Tested",
+    "description": "Field-Tested"
+  },
+  "ww_long": {
+    "message": "Well-Worn",
+    "description": "Well-Worn"
+  },
+  "bs_long": {
+    "message": "Battle-Scarred",
+    "description": "Battle-Scarred"
+  },
+  "fn_short": {
+    "message": "FN",
+    "description": "Factory New"
+  },
+  "mw_short": {
+    "message": "MW",
+    "description": "Minimal Wear"
+  },
+  "ft_short": {
+    "message": "FT",
+    "description": "Field-Tested"
+  },
+  "ww_short": {
+    "message": "WW",
+    "description": "Well-Worn"
+  },
+  "bs_short": {
+    "message": "BS",
+    "description": "Battle-Scarred"
+  },
+  "links_to_other_exteriors": {
+    "message": "Links to other exteriors",
+    "description": "Links to other exteriors"
+  },
+  "not_every_available": {
+    "message": "Not every item is available in every exterior",
+    "description": "Not every item is available in every exterior"
+  },
+  "souvenir": {
+    "message": "Souvenir",
+    "description": "Souvenir"
+  },
+  "get_float_info": {
+    "message": "Get Float Information...",
+    "description": "Get Float Information..."
+  }
+}

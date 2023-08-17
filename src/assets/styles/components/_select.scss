@@ -1,0 +1,18 @@
+.select-theme {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color: #e1e1e1;
+  border: none;
+  border-bottom: 1px solid $border-color-primary;
+  line-height: 1;
+  outline: 0;
+  padding: 0.65em 1.5em 0.55em 0.75em;
+  background-color: $background-secondary;
+  background-image: linear-gradient($background-secondary, $background-secondary),
+  linear-gradient(-115deg, transparent 50%, $background-secondary 50%),
+  linear-gradient(-245deg, transparent 50%, $background-secondary 50%),
+  linear-gradient($background-secondary 52%, $color-secondary 52%);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 1px 100%, 20px 22px, 20px 22px, 20px 100%;
+  background-position: right 20px center, right bottom, right bottom, right bottom;
+}

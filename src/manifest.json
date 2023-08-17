@@ -1,0 +1,77 @@
+{
+  "manifest_version": 3,
+  "name": "__Dota 2__",
+  "short_name": "Dota Extension",
+  "version": "1.0.0",
+  "default_locale": "en",
+  "description": "__Dota 2__",
+  "permissions": [
+    "storage",
+    "notifications",
+    "alarms",
+    "unlimitedStorage",
+    "*://steamcommunity.com/*",
+    "*://api.steampowered.com/*",
+    "*://steamrep.com/api/*"],
+  "optional_permissions": [
+    "tabs",
+    "*://discord.com/*"],
+  "background": {
+    "scripts": [
+      "js/backgroundScripts/background.bundle.js",
+      "js/backgroundScripts/messaging.bundle.js"]
+  },
+  "content_security_policy": "script-src 'self'; object-src 'self';",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://steamcommunity.com/*/inventory",
+        "*://steamcommunity.com/*/inventory/*"],
+      "run_at" : "document_idle",
+      "js": ["js/contentScripts/steam/inventory.bundle.js"],
+      "css": ["/css/generalCSTStyle.css"]
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/dev/apikey*",
+        "*://steamcommunity.com/dev/registerkey*",
+        "*://steamcommunity.com/dev/revokekey*"
+      ],
+      "run_at" : "document_idle",
+      "js": ["js/contentScripts/steam/apiKey.bundle.js"],
+      "css": ["/css/generalCSTStyle.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    "images/scammerbackground.jpg",
+    "images/verifiedBotAccount.jpg",
+    "images/paperclip.png",
+    "images/reply.png",
+    "images/growth.png",
+    "images/plus.png",
+    "images/hand-pointer-solid.svg",
+    "images/table-solid.svg",
+    "images/list-solid.svg",
+    "sound/notification/done-for-you.mp3",
+    "sound/notification/juntos.mp3",
+    "sound/notification/piece-of-cake.mp3",
+    "sound/notification/pristine.mp3",
+    "sound/notification/swifty.mp3",
+    "sound/notification/when.mp3"
+  ],
+  "browser_action": {
+    "default_popup": "index.html?page=popup",
+    "default_icon": {
+      "16": "images/icon16.jpeg",
+      "32": "images/icon32.jpeg",
+      "48": "images/icon48.jpeg",
+      "128": "images/icon128.jpeg"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.jpeg",
+    "32": "images/icon32.jpeg",
+    "48": "images/icon48.jpeg",
+    "128": "images/icon128.jpeg"
+  }
+}
