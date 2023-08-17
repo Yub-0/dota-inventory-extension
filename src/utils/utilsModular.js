@@ -1,6 +1,6 @@
+import DOMPurify from 'dompurify';
 import { injectScript, injectStyle } from 'utils/injection';
 import { getUserSteamID } from 'utils/steamID';
-import DOMPurify from 'dompurify';
 import { getIDsFromElement } from 'utils/itemsToElementsToItems';
 
 const logExtensionPresence = () => {

@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import {
   currencies,
   pricingProviders,
@@ -5,7 +6,6 @@ import {
   steamCurrencyCodes,
 } from 'utils/static/pricing';
 
-import DOMPurify from 'dompurify';
 import { findElementByIDs } from 'utils/itemsToElementsToItems';
 import { getItemMarketLink } from 'utils/simpleUtils';
 import { injectScript } from 'utils/injection';

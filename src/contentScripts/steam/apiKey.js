@@ -1,5 +1,5 @@
-import { logExtensionPresence, updateLoggedInUserInfo } from 'utils/utilsModular';
 import DOMPurify from 'dompurify';
+import { logExtensionPresence, updateLoggedInUserInfo } from 'utils/utilsModular';
 
 logExtensionPresence();
 updateLoggedInUserInfo();

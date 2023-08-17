@@ -1,4 +1,4 @@
-import { currencies, pricingProviders, realTimePricingModes } from 'utils/static/pricing';
+import { currencies, realTimePricingModes } from 'utils/static/pricing';
 import { listingsSortingModes, sortingModes } from 'utils/static/sortingModes';
 import { notificationSounds } from 'utils/static/notifications';
 
