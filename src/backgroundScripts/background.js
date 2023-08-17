@@ -34,7 +34,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     chrome.browserAction.setBadgeText({ text: 'I' });
     chrome.notifications.create('installed', {
       type: 'basic',
-      iconUrl: '/images/cstlogo128.png',
+      iconUrl: '/images/icon128.png',
       title: 'Extension installed!',
       message: 'Go to the options through the extension popup and customize your experience!',
     }, () => {
@@ -73,7 +73,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
           chrome.notifications.create('updated', {
             type: 'basic',
-            iconUrl: '/images/cstlogo128.png',
+            iconUrl: '/images/icon128.png',
             title: `Extension updated to ${version}!`,
             message,
           }, () => {
