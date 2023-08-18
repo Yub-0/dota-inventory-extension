@@ -6,3 +6,6 @@
 - Click on Load Unpacked and select the path inside the build folder where the manifest file is loacated.
 - The extension will be installed now.
 
+# Inspiration
+This project is based on [csgo-trader-extension](https://github.com/gergelyszabo94/csgo-trader-extension), created by [@gergelyszabo94](https://github.com/gergelyszabo94). While this project draws inspiration from the original work, it includes substantial modifications and enhancements to meet specific requirements and objectives.
+I would like to acknowledge the creative contributions of `@gergelyszabo94` and express my gratitude for making their work available to the open-source community.
