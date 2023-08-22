@@ -415,7 +415,6 @@ const updatePrices = () => {
               prices[key] = { price: pricesJSON[key][pricingMode] };
             } else {
               prices[key] = { price: null };
-              console.log(key);
             }
           }
         } else if (provider === pricingProviders.lootfarm.name
@@ -449,7 +448,6 @@ const updatePrices = () => {
               } else prices[key] = { price: pricesJSON[key][mode].price };
             } else {
               prices[key] = { price: null };
-              console.log(key);
             }
           }
         }

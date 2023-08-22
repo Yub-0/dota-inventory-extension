@@ -705,8 +705,8 @@ const setInventoryTotal = () => {
 const sortItems = (inventoryItems, method) => {
   const activeAppID = getActiveInventoryAppID();
   if (activeAppID === steamApps.DOTA2.appID) {
-    const itemElements = document.querySelectorAll('.item.app730.context2');
-    const inventoryPages = document.getElementById(`inventory_${getInventoryOwnerID()}_730_2`).querySelectorAll('.inventory_page');
+    const itemElements = document.querySelectorAll('.item.app570.context2');
+    const inventoryPages = document.getElementById(`inventory_${getInventoryOwnerID()}_570_2`).querySelectorAll('.inventory_page');
     doTheSorting(inventoryItems, Array.from(itemElements), method, Array.from(inventoryPages), 'inventory');
     addPerItemInfo(activeAppID);
   }
@@ -761,7 +761,7 @@ const addFunctionBar = () => {
     const sortingSelect = document.getElementById('sortingMethod');
 
     const keys = Object.keys(sortingModes);
-
+    console.log(sortingSelect);
     for (const key of keys) {
       const option = document.createElement('option');
       option.value = sortingModes[key].key;
