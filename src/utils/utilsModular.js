@@ -205,7 +205,7 @@ const getAssetIDOfElement = (element) => {
 };
 
 const addPriceIndicator = (
-  itemElement, priceInfo, currency, showContrastingLook, pricePercentage = 100,
+  itemElement, priceInfo, showContrastingLook,
 ) => {
   if (priceInfo !== undefined && priceInfo !== 'null' && priceInfo !== null) {
     const disPlayPrice = priceInfo;

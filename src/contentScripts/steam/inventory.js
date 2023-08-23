@@ -628,11 +628,10 @@ const addPerItemInfo = (appID) => {
   const itemElements = document.querySelectorAll(`.item.app${appID}.context2`);
   if (itemElements.length !== 0) {
     chrome.storage.local.get([
-      'currency',
       'showTradeLockIndicatorInInventories',
     ],
     ({
-      showTradeLockIndicatorInInventories, currency,
+      showTradeLockIndicatorInInventories,
     }) => {
       itemElements.forEach((itemElement) => {
         if (itemElement.getAttribute('data-processed') === null
@@ -660,7 +659,7 @@ const addPerItemInfo = (appID) => {
 
           if (appID === steamApps.DOTA2.appID) {
             addPriceIndicator(
-              itemElement, item.price, currency, showContrastingLook, pricePercentage,
+              itemElement, item.price, showContrastingLook,
             );
           }
 
@@ -676,7 +675,7 @@ const addPerItemInfo = (appID) => {
           if (currentPriceIndicatorEl) {
             currentPriceIndicatorEl.remove();
             addPriceIndicator(
-              itemElement, item.price, currency, showContrastingLook, pricePercentage,
+              itemElement, item.price, showContrastingLook,
             );
             itemElement.setAttribute('data-price-ratio', pricePercentage);
           }
@@ -761,7 +760,7 @@ const addFunctionBar = () => {
     const sortingSelect = document.getElementById('sortingMethod');
 
     const keys = Object.keys(sortingModes);
-    console.log(sortingSelect);
+    
     for (const key of keys) {
       const option = document.createElement('option');
       option.value = sortingModes[key].key;
