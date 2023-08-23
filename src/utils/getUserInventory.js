@@ -2,7 +2,26 @@ import { getShortDate } from 'utils/dateTime';
 import steamApps from 'utils/static/steamApps';
 import { getItemMarketLink } from 'utils/simpleUtils';
 
-const getUserDOTAInventory = (steamID) => new Promise((resolve, reject) => {
+async function getSingleItemPrice(marketHashName) {
+  const url = 'http://127.0.0.1:8000/api/price';
+  const s = {
+    name: marketHashName,
+  };
+  const promiseData = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', // Set the content type of the request
+    },
+    body: JSON.stringify(s), 
+  });
+  const data = await promiseData.json();
+  setTimeout(() => {
+    console.log('Delayed message after 3000ms');
+  }, 3000);
+  return data;
+}
+    
+const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) => {
   chrome.storage.local.get(
     ['itemPricing', 'dotaPrice'],
     ({
@@ -15,8 +34,9 @@ const getUserDOTAInventory = (steamID) => new Promise((resolve, reject) => {
           reject(response.statusText);
           console.log(`Error code: ${response.status} Status: ${response.statusText}`);
         } else return response.json();
-      }).then((body) => {
+      }).then(async (body) => {
         if (body.success) {
+          const fetchPromises = [];
           const items = body.rgDescriptions;
           const ids = body.rgInventory;
 
@@ -60,20 +80,6 @@ const getUserDOTAInventory = (steamID) => new Promise((resolve, reject) => {
                 let price = null;
                 const type = null;
 
-                if (itemPricing) {
-                  if (marketHashName in itemPrices) {
-                    if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
-                      && itemPrices[marketHashName].price !== 'null') {
-                      price = itemPrices[marketHashName].price;
-                    } else {
-                      price = parseFloat(0);
-                    }
-                  } else {
-                    price = parseFloat(0);
-                  }
-                  inventoryTotal += parseFloat(price);
-                } else price = { price: '', display: '' };
-
                 if (item.tradable === 0) {
                   tradability = item.cache_expiration;
                   tradabilityShort = getShortDate(tradability);
@@ -82,6 +88,28 @@ const getUserDOTAInventory = (steamID) => new Promise((resolve, reject) => {
                   tradability = 'Not Tradable';
                   tradabilityShort = '';
                 }
+                if (itemPricing && item.marketable !== 0) {
+                  if (marketHashName in itemPrices) {
+                    if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
+                      && itemPrices[marketHashName].price !== 'null') { 
+                      const d1 = new Date(itemPrices[marketHashName].update_date);
+                      const d2 = new Date();
+                      if ((Math.abs(d2 - d1) / 1000) > 86400) {
+                        fetchPromises.push(getSingleItemPrice(marketHashName));
+                        price = parseFloat(0);
+                      } else {
+                        price = itemPrices[marketHashName].price; 
+                      }
+                    } else {
+                      // fetchPromises.push(getSingleItemPrice(marketHashName));
+                      price = parseFloat(0);
+                    }
+                  } else {
+                    // fetchPromises.push(getSingleItemPrice(marketHashName));
+                    price = parseFloat(0);
+                  }
+                  inventoryTotal += parseFloat(price);
+                } else price = parseFloat(0);
 
                 itemsPropertiesToReturn.push({
                   name,
@@ -106,6 +134,20 @@ const getUserDOTAInventory = (steamID) => new Promise((resolve, reject) => {
                 });
               }
             }
+          }
+          if (fetchPromises) {
+            const fetchedPrices = await Promise.all(fetchPromises);
+            const pricesDictionary = fetchedPrices.reduce((acc, priceObj) => {
+              const itemName = Object.keys(priceObj)[0];
+              acc[itemName] = priceObj[itemName];
+              return acc;
+            }, {});
+            itemsPropertiesToReturn.forEach((i) => {
+              if (i.name in pricesDictionary) {
+                i.price = pricesDictionary[i.name].price;
+                inventoryTotal += i.price;
+              }
+            });
           }
           const inventoryItems = itemsPropertiesToReturn.sort((a, b) => {
             return a.position - b.position;
