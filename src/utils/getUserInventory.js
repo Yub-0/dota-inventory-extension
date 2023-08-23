@@ -395,4 +395,6 @@ const getOtherInventory = (appID, steamID) => new Promise((resolve, reject) => {
   });
 });
 
-export { getUserDOTAInventory, getUserDOTAInventoryAlternative, getOtherInventory };
+export {
+  getUserDOTAInventory, getUserDOTAInventoryAlternative, getOtherInventory, getSingleItemPrice,
+};

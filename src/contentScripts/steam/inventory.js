@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-
+import { getSingleItemPrice } from 'utils/getUserInventory'; 
 import {
   addPageControlEventListeners, addPriceIndicator, copyToClipboard, addUpdatedRibbon, updateLoggedInUserName,
   logExtensionPresence, repositionNameTagIcons,
@@ -15,7 +15,6 @@ import {
   getPriceOverview, getPriceAfterFees, prettyPrintPrice, addRealTimePriceToPage,
   priceQueue, workOnPriceQueue, getSteamWalletCurrency,
   updateWalletCurrency, getHighestBuyOrder, getLowestListingPrice,
-  getPrice,
 }
   from 'utils/pricing';
 import { getItemByIDs, getIDsFromElement } from 'utils/itemsToElementsToItems';
@@ -148,19 +147,21 @@ const getItemInfoFromPage = (appID, contextID) => {
   return JSON.parse(injectScript(getItemsScript, true, 'getInventory', 'inventoryInfo'));
 };
 
-const getDOTAInventoryDataFromPage = () => new Promise((resolve) => {
+const getDOTAInventoryDataFromPage = async () => new Promise((resolve) => {
   chrome.storage.local.get(
-    ['itemPricing', 'prices', 'currency', 'exchangeRate', 'pricingProvider', 'pricingMode'],
-    ({
-      itemPricing, prices, currency, exchangeRate, pricingProvider, pricingMode,
+    ['itemPricing', 'dotaPrice'],
+    async ({
+      itemPricing, dotaPrice,
     }) => {
+      const itemPrices = dotaPrice;
       const itemsFromPage = getItemInfoFromPage(steamApps.DOTA2.appID, '2').sort((a, b) => {
         return parseInt(b.assetid) - parseInt(a.assetid);
       });
+      const fetchPromises = [];
       const itemsPropertiesToReturn = [];
       const duplicates = {};
       const owner = getInventoryOwnerID();
-
+      console.log(itemsFromPage);
       // counts duplicates
       itemsFromPage.forEach((item) => {
         const marketHashName = item.description.market_hash_name;
@@ -184,15 +185,31 @@ const getDOTAInventoryDataFromPage = () => new Promise((resolve) => {
         let tradability = 'Tradable';
         let tradabilityShort = 'T';
         const icon = item.description.icon_url;
-        const dopplerInfo = null;
         let price = null;
         const type = null;
 
-        if (itemPricing) {
-          price = getPrice(marketHashName, dopplerInfo, prices,
-            pricingProvider, pricingMode, exchangeRate, currency);
-          inventoryTotal += parseFloat(price.price);
-        } else price = { price: '', display: '' };
+        if (itemPricing && item.marketable !== 0) {
+          if (marketHashName in itemPrices) {
+            if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
+              && itemPrices[marketHashName].price !== 'null') { 
+              const d1 = new Date(itemPrices[marketHashName].update_date);
+              const d2 = new Date();
+              if ((Math.abs(d2 - d1) / 1000) > 86400) {
+                fetchPromises.push(getSingleItemPrice(marketHashName));
+                price = parseFloat(0);
+              } else {
+                price = itemPrices[marketHashName].price; 
+              }
+            } else {
+              fetchPromises.push(getSingleItemPrice(marketHashName));
+              price = parseFloat(0);
+            }
+          } else {
+            fetchPromises.push(getSingleItemPrice(marketHashName));
+            price = parseFloat(0);
+          }
+          inventoryTotal += parseFloat(price);
+        } else price = parseFloat(0);
 
         if (item.description.tradable === 0) {
           tradability = 'Tradelocked';
@@ -230,6 +247,21 @@ const getDOTAInventoryDataFromPage = () => new Promise((resolve) => {
           position: index,
         });
       });
+      
+      if (fetchPromises) {
+        const fetchedPrices = await Promise.all(fetchPromises);
+        const pricesDictionary = fetchedPrices.reduce((acc, priceObj) => {
+          const itemName = Object.keys(priceObj)[0];
+          acc[itemName] = priceObj[itemName];
+          return acc;
+        }, {});
+        itemsPropertiesToReturn.forEach((i) => {
+          if (i.name in pricesDictionary) {
+            i.price = pricesDictionary[i.name].price;
+            inventoryTotal += i.price;
+          }
+        });
+      }
       resolve(itemsPropertiesToReturn);
       // },
       // );
@@ -812,7 +844,9 @@ const loadFullInventory = () => {
         setTimeout(() => {
           loadFullInventory();
         }, 2000);
-      } else onFullDOTAInventoryLoad();
+      } else {
+        onFullDOTAInventoryLoad();
+      }
     } else onFullDOTAInventoryLoad();
   } else doInitSorting();
 };
