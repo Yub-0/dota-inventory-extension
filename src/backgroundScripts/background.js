@@ -1,6 +1,6 @@
 import { storageKeys } from 'utils/static/storageKeys';
 import {
-  updatePrices, updateExchangeRates, getUserCurrencyBestGuess, getDotaPrice,
+  updateExchangeRates, getUserCurrencyBestGuess, getDotaPrice,
 } from 'utils/pricing';
 import {
   scrapeSteamAPIkey, goToInternalPage,
@@ -88,7 +88,6 @@ chrome.runtime.onInstalled.addListener((details) => {
   // retries periodically if it's the first time (on install)
   // and it fails to update prices/exchange rates
   getDotaPrice();
-  updatePrices();
   updateExchangeRates();
   chrome.alarms.create('offerMonitoring', { periodInMinutes: 2 });
   chrome.alarms.create('friendRequestMonitoring', { periodInMinutes: 5 });
@@ -140,13 +139,13 @@ chrome.notifications.onClicked.addListener((notificationID) => {
 // handles periodic and timed events like bookmarked items becoming tradable
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'retryUpdatePricesAndExchangeRates') {
-    chrome.storage.local.get('prices', (result) => {
-      if (result.prices === null) updatePrices();
+    chrome.storage.local.get('dotaPrice', (result) => {
+      if (result.prices === null) getDotaPrice();
       else chrome.alarms.clear('retryUpdatePricesAndExchangeRates', () => { });
     });
   } else if (alarm.name === 'priceUpdate') {
     chrome.storage.local.get('itemPricing', ({ itemPricing }) => {
-      if (itemPricing) updatePrices();
+      if (itemPricing) getDotaPrice();
     });
   } else if (alarm.name === 'dailyScheduledTasks') {
     updateExchangeRates();

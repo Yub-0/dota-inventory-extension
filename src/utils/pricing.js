@@ -1,7 +1,6 @@
 import DOMPurify from 'dompurify';
 import {
   currencies,
-  pricingProviders,
   realTimePricingModes,
   steamCurrencyCodes,
 } from 'utils/static/pricing';
@@ -376,87 +375,6 @@ const workOnPriceQueue = () => {
   }
 };
 
-const updatePrices = () => {
-  chrome.storage.local.get(['itemPricing', 'pricingProvider', 'pricingMode'], (result) => {
-    const provider = result.pricingProvider;
-    const mode = result.pricingMode;
-    const headers = new Headers();
-
-    headers.append('Accept-Encoding', 'gzip');
-    const init = {
-      method: 'GET',
-      headers,
-      mode: 'cors',
-      cache: 'default',
-    };
-
-    const request = new Request(`https://prices.csgotrader.app/latest/${provider}.json`, init);
-    fetch(request).then((response) => {
-      if (!response.ok) {
-        console.log(`Error code: ${response.status} Status: ${response.statusText}`);
-      }
-      return response.json();
-    }).then((pricesJSON) => {
-      if (result.itemPricing) {
-        const prices = {};
-        const keys = Object.keys(pricesJSON);
-
-        if (provider === pricingProviders.steam.name
-          || provider === pricingProviders.bitskins.name
-          || provider === pricingProviders.skinport.name) {
-          let pricingMode = mode;
-          if (mode === pricingProviders.bitskins.pricing_modes.bitskins.name) pricingMode = 'price';
-          else if (mode === pricingProviders.bitskins.pricing_modes.instant_sale.name) {
-            pricingMode = 'instant_sale_price';
-          }
-
-          for (const key of keys) {
-            if (pricesJSON[key][pricingMode] !== undefined) {
-              prices[key] = { price: pricesJSON[key][pricingMode] };
-            } else {
-              prices[key] = { price: null };
-            }
-          }
-        } else if (provider === pricingProviders.lootfarm.name
-          || provider === pricingProviders.csgotm.name
-          || provider === pricingProviders.csgoempire.name
-          || provider === pricingProviders.swapgg.name
-          || provider === pricingProviders.csgoexo.name
-          || provider === pricingProviders.skinwallet.name) {
-          for (const key of keys) {
-            prices[key] = { price: pricesJSON[key] };
-          }
-        } else if (provider === pricingProviders.csmoney.name
-          || provider === pricingProviders.csgotrader.name
-          || provider === pricingProviders.cstrade.name) {
-          for (const key of keys) {
-            if (pricesJSON[key].doppler !== undefined) {
-              prices[key] = {
-                price: pricesJSON[key].price,
-                doppler: pricesJSON[key].doppler,
-              };
-            } else prices[key] = { price: pricesJSON[key].price };
-          }
-        } else if (provider === pricingProviders.buff163.name) {
-          for (const key of keys) {
-            if (pricesJSON[key][mode] !== undefined) {
-              if (pricesJSON[key][mode].doppler !== undefined) {
-                prices[key] = {
-                  price: pricesJSON[key][mode].price,
-                  doppler: pricesJSON[key][mode].doppler,
-                };
-              } else prices[key] = { price: pricesJSON[key][mode].price };
-            } else {
-              prices[key] = { price: null };
-            }
-          }
-        }
-        chrome.storage.local.set({ prices }, () => { });
-      }
-    }).catch((err) => { console.log(err); });
-  });
-};
-
 async function getDotaPrice() {
   const url = 'http://127.0.0.1:8000/api/price';
   const i = await fetch(url);
@@ -477,34 +395,6 @@ const updateExchangeRates = () => {
       chrome.storage.local.set({ exchangeRate: exchangeRatesJSON[currency] }, () => { });
     });
   }).catch((err) => { console.log(err); });
-};
-
-const getPrice = (marketHashName, dopplerInfo, prices, provider, mode, exchangeRate, currency) => {
-  let price = 0.0;
-  if (prices[marketHashName] !== undefined && prices[marketHashName] !== 'null'
-    && prices[marketHashName] !== null && prices[marketHashName].price !== undefined
-    && prices[marketHashName].price !== 'null') {
-    // csgotrader, csmoney and buff have doppler phase prices so they are handled differently
-    if ((provider === pricingProviders.csgotrader.name || provider === pricingProviders.csmoney.name
-      || provider === pricingProviders.buff163.name)) { // other providers have no doppler info
-      if (dopplerInfo !== null) {
-        // when there is price for the specific doppler phase take that
-        if (prices[marketHashName].doppler !== undefined && prices[marketHashName].doppler
-          !== 'null' && prices[marketHashName].doppler[dopplerInfo.name] !== 'null'
-          && prices[marketHashName].doppler[dopplerInfo.name] !== undefined
-          && prices[marketHashName].doppler[dopplerInfo.name] !== null) {
-          price = (prices[marketHashName].doppler[dopplerInfo.name] * exchangeRate).toFixed(2);
-        } else if (provider === pricingProviders.buff163.name
-          && mode === pricingProviders.buff163.pricing_modes.starting_at.name) {
-          price = 0.0;
-        } else price = (prices[marketHashName].price * exchangeRate).toFixed(2);
-      } else price = (prices[marketHashName].price * exchangeRate).toFixed(2);
-    } else price = (prices[marketHashName].price * exchangeRate).toFixed(2);
-  }
-  return {
-    price,
-    display: price === 0.0 ? '' : currencies[currency].sign + price,
-  };
 };
 
 const prettyPrintPrice = (currency, price) => {
@@ -623,7 +513,7 @@ const updateWalletCurrency = () => {
 };
 
 export {
-  updatePrices, updateExchangeRates, getPrice, getUserCurrencyBestGuess,
+  updateExchangeRates, getUserCurrencyBestGuess,
   prettyPrintPrice, getPriceOverview, getMidPrice,
   getPriceAfterFees, userPriceToProperPrice, centsToSteamFormattedPrice,
   steamFormattedPriceToCents, priceQueue, workOnPriceQueue,
