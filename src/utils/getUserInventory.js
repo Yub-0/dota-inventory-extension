@@ -91,7 +91,7 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
                 if (itemPricing && item.marketable !== 0) {
                   if (marketHashName in itemPrices) {
                     if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
-                      && itemPrices[marketHashName].price !== 'null') { 
+                      && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') { 
                       const d1 = new Date(itemPrices[marketHashName].update_date);
                       const d2 = new Date();
                       if ((Math.abs(d2 - d1) / 1000) > 86400) {
@@ -101,11 +101,11 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
                         price = itemPrices[marketHashName].price; 
                       }
                     } else {
-                      // fetchPromises.push(getSingleItemPrice(marketHashName));
+                      fetchPromises.push(getSingleItemPrice(marketHashName));
                       price = parseFloat(0);
                     }
                   } else {
-                    // fetchPromises.push(getSingleItemPrice(marketHashName));
+                    fetchPromises.push(getSingleItemPrice(marketHashName));
                     price = parseFloat(0);
                   }
                   inventoryTotal += parseFloat(price);
