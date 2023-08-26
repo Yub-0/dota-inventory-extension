@@ -4,7 +4,7 @@ import {
   addPageControlEventListeners, addPriceIndicator, copyToClipboard, addUpdatedRibbon, updateLoggedInUserName,
   logExtensionPresence, repositionNameTagIcons,
   updateLoggedInUserInfo, reloadPageOnExtensionReload, isSIHActive, getActivePage,
-  addSearchListener,
+  addSearchListener, makeItemColorful, getQuality,
 }
   from 'utils/utilsModular';
 import {
@@ -232,12 +232,12 @@ const getDOTAInventoryDataFromPage = async () => new Promise((resolve) => {
           instanceid: item.instanceid,
           assetid: assetID,
           commodity: item.description.commodity,
+          quality: getQuality(item.tags),
           tradability,
           tradabilityShort,
           marketable: item.description.marketable,
           iconURL: icon,
           inspectLink: null,
-          quality: null,
           nametag: null,
           duplicates: duplicates[marketHashName],
           owner,
@@ -247,7 +247,7 @@ const getDOTAInventoryDataFromPage = async () => new Promise((resolve) => {
           position: index,
         });
       });
-      
+      console.log(itemsPropertiesToReturn);
       if (fetchPromises) {
         const fetchedPrices = await Promise.all(fetchPromises);
         const pricesDictionary = fetchedPrices.reduce((acc, priceObj) => {
@@ -660,10 +660,10 @@ const addPerItemInfo = (appID) => {
   const itemElements = document.querySelectorAll(`.item.app${appID}.context2`);
   if (itemElements.length !== 0) {
     chrome.storage.local.get([
-      'showTradeLockIndicatorInInventories',
+      'showTradeLockIndicatorInInventories', 'colorfulItems',
     ],
     ({
-      showTradeLockIndicatorInInventories,
+      showTradeLockIndicatorInInventories, colorfulItems,
     }) => {
       itemElements.forEach((itemElement) => {
         if (itemElement.getAttribute('data-processed') === null
@@ -690,6 +690,7 @@ const addPerItemInfo = (appID) => {
           }
 
           if (appID === steamApps.DOTA2.appID) {
+            makeItemColorful(itemElement, item, colorfulItems);
             addPriceIndicator(
               itemElement, item.price, showContrastingLook,
             );

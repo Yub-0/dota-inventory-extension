@@ -2,6 +2,8 @@ import DOMPurify from 'dompurify';
 import { injectScript, injectStyle } from 'utils/injection';
 import { getUserSteamID } from 'utils/steamID';
 import { getIDsFromElement } from 'utils/itemsToElementsToItems';
+import rarities from 'utils/static/rarities';
+import qualities from 'utils/static/qualities';
 
 const logExtensionPresence = () => {
   const { version } = chrome.runtime.getManifest();
@@ -31,6 +33,12 @@ const getAppropriateFetchFunc = () => {
   } catch (e) { }
 
   return fetchFunction;
+};
+
+const makeItemColorful = (itemElement, item, colorfulItemsEnabled) => {
+  if (colorfulItemsEnabled) {
+    itemElement.setAttribute('style', `background-image: url(); background-color: ${item.quality.backgroundcolor}; border-color: ${item.quality.backgroundcolor}`);
+  }
 };
 
 const validateSteamAPIKey = (apiKey) => new Promise((resolve, reject) => {
@@ -214,9 +222,29 @@ const addPriceIndicator = (
     //   : currencies[currency].sign + (priceInfo.price * (pricePercentage / 100)).toFixed(2);
     const contrastingLookClass = showContrastingLook ? 'contrastingBackground' : '';
     itemElement.insertAdjacentHTML(
-      'beforeend', DOMPurify.sanitize(`<div class='priceIndicator ${contrastingLookClass}'>${disPlayPrice}</div>`),
+      'beforeend', DOMPurify.sanitize(`<div class='priceIndicator ${contrastingLookClass}'>$${disPlayPrice}</div>`),
     );
   }
+};
+
+const getQuality = (tags) => {
+  if (tags !== undefined) {
+    for (const tag of tags) {
+      if (tag.category === 'Rarity') {
+        for (const rarity in rarities) {
+          if (rarities[rarity].internal_name === tag.internal_name) {
+            console.log(rarities[rarity].name);
+            return qualities[rarities[rarity].name];
+          }
+        }
+
+        // if the rarity is unknown to the extension
+        console.log(tag.internal_name);
+        return qualities.unknown;
+      }
+    }
+  }
+  return null;
 };
 
 const reloadPageOnExtensionReload = () => {
@@ -465,11 +493,11 @@ const isChromium = () => {
 
 export {
   logExtensionPresence, scrapeSteamAPIkey, arrayFromArrayOrNotArray, removeFromArray, changePageTitle,
-  goToInternalPage, jumpToAnchor, copyToClipboard,
+  goToInternalPage, jumpToAnchor, copyToClipboard, makeItemColorful,
   validateSteamAPIKey, getAssetIDFromInspectLink, updateLoggedInUserInfo,
   listenToLocationChange, addPageControlEventListeners, getItemByAssetID,
   getAssetIDOfElement, getActivePage, addPriceIndicator, updateLoggedInUserName, removeLinkFilterFromLinks,
-  getInspectLink, markModMessagesAsRead,
+  getInspectLink, markModMessagesAsRead, getQuality,
   reloadPageOnExtensionReload, isSIHActive, addSearchListener, getSessionID, getNameTag, repositionNameTagIcons,
   removeOfferFromActiveOffers, addUpdatedRibbon, getRemoteImageAsObjectURL,
   isChromium, getAppropriateFetchFunc,

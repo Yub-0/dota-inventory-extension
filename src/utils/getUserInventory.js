@@ -1,6 +1,7 @@
 import { getShortDate } from 'utils/dateTime';
 import steamApps from 'utils/static/steamApps';
 import { getItemMarketLink } from 'utils/simpleUtils';
+import { getQuality } from 'utils/utilsModular';
 
 async function getSingleItemPrice(marketHashName) {
   const url = 'http://127.0.0.1:8000/api/price';
@@ -78,7 +79,6 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
                 const icon = item.icon_url;
                 const owner = steamID;
                 let price = null;
-                const type = null;
 
                 if (item.tradable === 0) {
                   tradability = item.cache_expiration;
@@ -122,6 +122,7 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
                   instanceid: item.instanceid,
                   assetid: assetID,
                   commodity: item.commodity,
+                  quality: getQuality(item.tags),
                   position,
                   tradability,
                   tradabilityShort,
@@ -130,7 +131,6 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
                   duplicates: duplicates[marketHashName],
                   owner,
                   price,
-                  type,
                 });
               }
             }
@@ -229,7 +229,6 @@ const getUserDOTAInventoryAlternative = (steamID) => new Promise((resolve, rejec
               const icon = item.icon_url;
               const owner = steamID;
               let price = null;
-              const type = null;
 
               if (itemPricing) {
                 price = null;
@@ -255,15 +254,14 @@ const getUserDOTAInventoryAlternative = (steamID) => new Promise((resolve, rejec
                 instanceid: item.instanceid,
                 assetid: assetID,
                 commodity: item.commodity,
+                quality: getQuality(item.tags),
                 tradability,
                 tradabilityShort,
                 marketable: item.marketable,
                 iconURL: icon,
-                quality: null,
                 duplicates: duplicates[marketHashName],
                 owner,
                 price,
-                type,
               });
             } else {
               console.log('Description not found for asset:');
@@ -366,6 +364,7 @@ const getOtherInventory = (appID, steamID) => new Promise((resolve, reject) => {
               appid: item.appid,
               contextid: '2',
               commodity: item.commodity,
+              quality: getQuality(item.tags),
               classid: item.classid,
               instanceid: item.instanceid,
               assetid: assetID,
@@ -380,6 +379,7 @@ const getOtherInventory = (appID, steamID) => new Promise((resolve, reject) => {
           }
         }
       }
+
       const inventoryItems = itemsPropertiesToReturn.sort((a, b) => {
         return a.position - b.position;
       });
