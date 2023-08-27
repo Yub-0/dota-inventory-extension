@@ -35,10 +35,10 @@ let showDuplicates = true;
 let countingDown = false;
 let countDownID = '';
 
-// const lowerModule = `<a class="lowerModule">
-//     <div class="descriptor tradability tradabilityDiv"></div>
-//     <div class="descriptor countdown"></div>
-// </a>`;
+const lowerModule = `<a class="lowerModule">
+    <div class="descriptor tradability tradabilityDiv"></div>
+    <div class="descriptor countdown"></div>
+</a>`;
 
 const tradable = '<span class="tradable">Tradable</span>';
 const notTradable = '<span class="not_tradable">Not Tradable</span>';
@@ -330,6 +330,12 @@ const addRightSideElements = () => {
       || activeInventoryAppID === steamApps.DOTA2.appID
       || activeInventoryAppID === steamApps.TF2.appID
     ) {
+      document.querySelectorAll('#iteminfo1_item_actions, #iteminfo0_item_actions')
+        .forEach((action) => {
+          action.insertAdjacentHTML('afterend', DOMPurify.sanitize(`
+          ${lowerModule}`));
+        });
+
       if (activeInventoryAppID === steamApps.DOTA2.appID) {
         // hides "tags" and "tradable after" in one's own inventory
         document.querySelectorAll('#iteminfo1_item_tags, #iteminfo0_item_tags, #iteminfo1_item_owner_descriptors, #iteminfo0_item_owner_descriptors')
