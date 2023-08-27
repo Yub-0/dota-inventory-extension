@@ -360,9 +360,8 @@ const addUpdatedRibbon = () => {
           `<div id="extensionUpdatedRibbon">
                       Thank you for trying my extension. Check out how it works  
                       <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" target="_blank" title="Scammed">
-                          here!
+                          here! Close lol!
                       </a>
-                      <span class="clickable" id="closeUpdatedRibbon" title="Close ribbon until the next update">Close lol</span>
                     </div>`,
           { ADD_ATTR: ['target'] },
         ),

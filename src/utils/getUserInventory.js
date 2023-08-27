@@ -173,10 +173,11 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
 // unused atm
 const getUserDOTAInventoryAlternative = (steamID) => new Promise((resolve, reject) => {
   chrome.storage.local.get(
-    ['itemPricing'],
+    ['itemPricing', 'dotaPrice'],
     ({
-      itemPricing,
+      itemPricing, dotaPrice,
     }) => {
+      const itemPrices = dotaPrice;
       const getRequest = new Request(`https://steamcommunity.com/inventory/${steamID}/730/2/?l=english&count=2000`);
       fetch(getRequest).then((response) => {
         if (!response.ok) {
@@ -185,11 +186,12 @@ const getUserDOTAInventoryAlternative = (steamID) => new Promise((resolve, rejec
         } else return response.json();
       }).then((body) => {
         if (body.success) {
+          const fetchPromises = [];
           const assets = body.assets;
           const descriptions = body.descriptions;
 
           const itemsPropertiesToReturn = [];
-          const inventoryTotal = 0.0;
+          let inventoryTotal = 0.0;
           const duplicates = {};
 
           // counts duplicates
@@ -373,28 +375,6 @@ const getOtherInventory = (appID, steamID) => new Promise((resolve, reject) => {
               tradability = 'Not Tradable';
               tradabilityShort = '';
             }
-            if (itemPricing && item.marketable !== 0) {
-              if (marketHashName in itemPrices) {
-                if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
-                  && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') { 
-                  const d1 = new Date(itemPrices[marketHashName].update_date);
-                  const d2 = new Date();
-                  if ((Math.abs(d2 - d1) / 1000) > 86400) {
-                    fetchPromises.push(getSingleItemPrice(marketHashName));
-                    price = parseFloat(0);
-                  } else {
-                    price = itemPrices[marketHashName].price; 
-                  }
-                } else {
-                  fetchPromises.push(getSingleItemPrice(marketHashName));
-                  price = parseFloat(0);
-                }
-              } else {
-                fetchPromises.push(getSingleItemPrice(marketHashName));
-                price = parseFloat(0);
-              }
-              inventoryTotal += parseFloat(price);
-            } else price = parseFloat(0);
 
             itemsPropertiesToReturn.push({
               name,
