@@ -84,7 +84,7 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
                   tradability = item.cache_expiration;
                   tradabilityShort = getShortDate(tradability);
                 }
-                if (item.marketable === 0) {
+                if (item.marketable === 0 && item.cache_expiration === undefined) {
                   tradability = 'Not Tradable';
                   tradabilityShort = '';
                 }
@@ -230,18 +230,36 @@ const getUserDOTAInventoryAlternative = (steamID) => new Promise((resolve, rejec
               const owner = steamID;
               let price = null;
 
-              if (itemPricing) {
-                price = null;
-              } else price = { price: '', display: '' };
-
               if (item.tradable === 0) {
                 tradability = 'Tradelocked';
                 tradabilityShort = 'L';
               }
-              if (item.marketable === 0) {
+              if (item.marketable === 0 && item.cache_expiration === undefined) {
                 tradability = 'Not Tradable';
                 tradabilityShort = '';
               }
+              if (itemPricing && item.marketable !== 0) {
+                if (marketHashName in itemPrices) {
+                  if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
+                    && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') { 
+                    const d1 = new Date(itemPrices[marketHashName].update_date);
+                    const d2 = new Date();
+                    if ((Math.abs(d2 - d1) / 1000) > 86400) {
+                      fetchPromises.push(getSingleItemPrice(marketHashName));
+                      price = parseFloat(0);
+                    } else {
+                      price = itemPrices[marketHashName].price; 
+                    }
+                  } else {
+                    fetchPromises.push(getSingleItemPrice(marketHashName));
+                    price = parseFloat(0);
+                  }
+                } else {
+                  fetchPromises.push(getSingleItemPrice(marketHashName));
+                  price = parseFloat(0);
+                }
+                inventoryTotal += parseFloat(price);
+              } else price = parseFloat(0);
 
               itemsPropertiesToReturn.push({
                 name,
@@ -351,10 +369,32 @@ const getOtherInventory = (appID, steamID) => new Promise((resolve, reject) => {
               tradability = item.cache_expiration;
               tradabilityShort = getShortDate(tradability);
             }
-            if (item.marketable === 0) {
+            if (item.marketable === 0 && item.cache_expiration === undefined) {
               tradability = 'Not Tradable';
               tradabilityShort = '';
             }
+            if (itemPricing && item.marketable !== 0) {
+              if (marketHashName in itemPrices) {
+                if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
+                  && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') { 
+                  const d1 = new Date(itemPrices[marketHashName].update_date);
+                  const d2 = new Date();
+                  if ((Math.abs(d2 - d1) / 1000) > 86400) {
+                    fetchPromises.push(getSingleItemPrice(marketHashName));
+                    price = parseFloat(0);
+                  } else {
+                    price = itemPrices[marketHashName].price; 
+                  }
+                } else {
+                  fetchPromises.push(getSingleItemPrice(marketHashName));
+                  price = parseFloat(0);
+                }
+              } else {
+                fetchPromises.push(getSingleItemPrice(marketHashName));
+                price = parseFloat(0);
+              }
+              inventoryTotal += parseFloat(price);
+            } else price = parseFloat(0);
 
             itemsPropertiesToReturn.push({
               name,
