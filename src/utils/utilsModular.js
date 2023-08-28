@@ -233,11 +233,9 @@ const getQuality = (tags) => {
       if (tag.category === 'Rarity') {
         for (const rarity in rarities) {
           if (rarities[rarity].internal_name === tag.internal_name) {
-            console.log(rarities[rarity].name);
             return qualities[rarities[rarity].name];
           }
         }
-
         // if the rarity is unknown to the extension
         console.log(tag.internal_name);
         return qualities.unknown;
@@ -358,10 +356,9 @@ const addUpdatedRibbon = () => {
         'afterbegin',
         DOMPurify.sanitize(
           `<div id="extensionUpdatedRibbon">
-                      Thank you for trying my extension. Check out how it works  
-                      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" target="_blank" title="Scammed">
-                          here! Close lol!
-                      </a>
+                      Thank you for trying my extension.
+                      <span class="clickable" id="closeUpdatedRibbon" title="Close ribbon until the next update">
+                      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" target="_blank" title="Scammed">Close lol!</a></span>
                     </div>`,
           { ADD_ATTR: ['target'] },
         ),

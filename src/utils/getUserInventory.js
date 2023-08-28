@@ -17,9 +17,6 @@ async function getSingleItemPrice(marketHashName) {
     body: JSON.stringify(s), 
   });
   const data = await promiseData.json();
-  setTimeout(() => {
-    console.log('Delayed message after 3000ms');
-  }, 3000);
   return data;
 }
     

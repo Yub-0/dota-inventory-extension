@@ -161,7 +161,6 @@ const getDOTAInventoryDataFromPage = async () => new Promise((resolve) => {
       const itemsPropertiesToReturn = [];
       const duplicates = {};
       const owner = getInventoryOwnerID();
-      console.log(itemsFromPage);
       // counts duplicates
       itemsFromPage.forEach((item) => {
         const marketHashName = item.description.market_hash_name;
@@ -247,7 +246,6 @@ const getDOTAInventoryDataFromPage = async () => new Promise((resolve) => {
           position: index,
         });
       });
-      console.log(itemsPropertiesToReturn);
       if (fetchPromises) {
         const fetchedPrices = await Promise.all(fetchPromises);
         const pricesDictionary = fetchedPrices.reduce((acc, priceObj) => {
@@ -613,52 +611,52 @@ const addRightSideElements = () => {
 };
 
 const addRealTimePricesToQueue = () => {
-  if (!document.getElementById('selectButton').classList.contains('selectionActive')) {
-    chrome.storage.local.get(
-      ['realTimePricesAutoLoadInventory', 'realTimePricesMode'],
-      ({ realTimePricesAutoLoadInventory, realTimePricesMode }) => {
-        if (realTimePricesAutoLoadInventory) {
-          const itemElements = [];
-          const page = getActivePage('inventory');
+  // if (!document.getElementById('selectButton').classList.contains('selectionActive')) {
+  chrome.storage.local.get(
+    ['realTimePricesAutoLoadInventory', 'realTimePricesMode'],
+    ({ realTimePricesAutoLoadInventory, realTimePricesMode }) => {
+      if (realTimePricesAutoLoadInventory) {
+        const itemElements = [];
+        const page = getActivePage('inventory');
 
-          if (page !== null) {
-            page.querySelectorAll('.item').forEach((item) => {
-              if (!item.classList.contains('unknownItem')) itemElements.push(item);
-            });
-          } else {
-            setTimeout(() => {
-              addRealTimePricesToQueue();
-            }, 1000);
-          }
-
-          if (itemElements) {
-            itemElements.forEach((itemElement) => {
-              if (itemElement.getAttribute('data-realtime-price') === null) {
-                const IDs = getIDsFromElement(itemElement, 'inventory');
-                const item = getItemByIDs(items, IDs.appID, IDs.contextID, IDs.assetID);
-
-                itemElement.setAttribute('data-realtime-price', '0');
-                if (item && item.marketable === 1) {
-                  priceQueue.jobs.push({
-                    type: `inventory_${realTimePricesMode}`,
-                    assetID: item.assetid,
-                    appID: item.appid,
-                    contextID: item.contextid,
-                    market_hash_name: item.market_hash_name,
-                    retries: 0,
-                    showContrastingLook,
-                    callBackFunction: addRealTimePriceToPage,
-                  });
-                }
-              }
-            });
-
-            if (!priceQueue.active) workOnPriceQueue();
-          }
+        if (page !== null) {
+          page.querySelectorAll('.item').forEach((item) => {
+            if (!item.classList.contains('unknownItem')) itemElements.push(item);
+          });
+        } else {
+          setTimeout(() => {
+            addRealTimePricesToQueue();
+          }, 1000);
         }
-      },
-    );
-  }
+
+        if (itemElements) {
+          itemElements.forEach((itemElement) => {
+            if (itemElement.getAttribute('data-realtime-price') === null) {
+              const IDs = getIDsFromElement(itemElement, 'inventory');
+              const item = getItemByIDs(items, IDs.appID, IDs.contextID, IDs.assetID);
+
+              itemElement.setAttribute('data-realtime-price', '0');
+              if (item && item.marketable === 1) {
+                priceQueue.jobs.push({
+                  type: `inventory_${realTimePricesMode}`,
+                  assetID: item.assetid,
+                  appID: item.appid,
+                  contextID: item.contextid,
+                  market_hash_name: item.market_hash_name,
+                  retries: 0,
+                  showContrastingLook,
+                  callBackFunction: addRealTimePriceToPage,
+                });
+              }
+            }
+          });
+
+          if (!priceQueue.active) workOnPriceQueue();
+        }
+      }
+    },
+  );
+  // }
 };
 
 // adds everything that is per item, like trade lock, exterior, doppler phases, border colors
@@ -754,7 +752,6 @@ const doInitSorting = () => {
   chrome.storage.local.get('inventorySortingMode', (result) => {
     sortItems(items, result.inventorySortingMode);
     document.querySelector(`#sortingMethod [value="${result.inventorySortingMode}"]`).selected = true;
-    document.querySelector(`#generate_sort [value="${result.inventorySortingMode}"]`).selected = true;
     addRealTimePricesToQueue();
   });
 };
