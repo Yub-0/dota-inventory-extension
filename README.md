@@ -13,5 +13,6 @@
 - run the backend at `127.0.0.1:8000` to enable price fetching
 
 # Inspiration
-This project is based on [csgo-trader-extension](https://github.com/gergelyszabo94/csgo-trader-extension), created by [@gergelyszabo94](https://github.com/gergelyszabo94). While this project draws inspiration from the original work, it includes substantial modifications and enhancements to meet specific requirements and objectives.
-I would like to acknowledge the creative mind of `@gergelyszabo94` and express my gratitude for making their work available to the open-source community.
+Yo, check it out! This project is built off of the dope [csgo-trader-extension](https://github.com/gergelyszabo94/csgo-trader-extension) made by the homie [@gergelyszabo94](https://github.com/gergelyszabo94).
+But, we've made some major changes and improvements to fit our own needs and goals.
+Big shoutout to `@gergelyszabo94` for being a genius and sharing their work with the open-source community. Much love!

@@ -2,9 +2,10 @@ import { getShortDate } from 'utils/dateTime';
 import steamApps from 'utils/static/steamApps';
 import { getItemMarketLink } from 'utils/simpleUtils';
 import { getQuality } from 'utils/utilsModular';
+import API_HOST from 'utils/static/apiIndex';
 
 async function getSingleItemPrice(marketHashName) {
-  const url = 'http://127.0.0.1:8000/api/price';
+  const url = `${API_HOST}/api/price`;
   const s = {
     name: marketHashName,
   };

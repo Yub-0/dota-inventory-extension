@@ -9,6 +9,7 @@ import { findElementByIDs } from 'utils/itemsToElementsToItems';
 import { getItemMarketLink } from 'utils/simpleUtils';
 import { injectScript } from 'utils/injection';
 import { storageKeys } from 'utils/static/storageKeys';
+import API_HOST from 'utils/static/apiIndex';
 
 const priceQueue = {
   active: false,
@@ -376,7 +377,7 @@ const workOnPriceQueue = () => {
 };
 
 async function getDotaPrice() {
-  const url = 'http://127.0.0.1:8000/api/price';
+  const url = `${API_HOST}/api/price`;
   const i = await fetch(url);
   const data = await i.json();
   chrome.storage.local.set({ dotaPrice: data });
