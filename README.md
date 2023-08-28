@@ -10,7 +10,9 @@
 - Currently works by fetching pricing data from a local backend api
 - price fetching is done by function [getDotaPrice()](src\utils\pricing.js) which calls the backend api 
 - backend can be found at [dota-price-scrapper](https://github.com/Yub-0/dota-price-scrapper)
-- run the backend at `127.0.0.1:8000` to enable price fetching
+- run the backend at `127.0.0.1:8000` or any suitable binding address preferable
+- configure variable [API_HOST](src\utils\static\apiIndex.js) according the endpoint binding address open at the backend.
+- eg: `API_HOST = '127.0.0.1:8000'`, `API_HOST = '192.168.1.122:8001'`, etc.
 
 # Inspiration
 Yo, check it out! This project is built off of the dope [csgo-trader-extension](https://github.com/gergelyszabo94/csgo-trader-extension) made by the homie [@gergelyszabo94](https://github.com/gergelyszabo94).
