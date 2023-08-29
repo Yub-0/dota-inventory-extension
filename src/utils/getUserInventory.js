@@ -14,7 +14,7 @@ async function getSingleItemPrice(marketHashName) {
     headers: {
       'Content-Type': 'application/json', // Set the content type of the request
     },
-    body: JSON.stringify(s), 
+    body: JSON.stringify(s),
   });
   const data = await promiseData.json();
   return data;
@@ -89,14 +89,14 @@ const getUserDOTAInventory = async (steamID) => new Promise((resolve, reject) =>
                 if (itemPricing && item.marketable !== 0) {
                   if (marketHashName in itemPrices) {
                     if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
-                      && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') { 
+                      && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') {
                       const d1 = new Date(itemPrices[marketHashName].update_date);
                       const d2 = new Date();
                       if ((Math.abs(d2 - d1) / 1000) > 86400) {
                         fetchPromises.push(getSingleItemPrice(marketHashName));
                         price = parseFloat(0);
                       } else {
-                        price = itemPrices[marketHashName].price; 
+                        price = itemPrices[marketHashName].price;
                       }
                     } else {
                       fetchPromises.push(getSingleItemPrice(marketHashName));
@@ -241,14 +241,14 @@ const getUserDOTAInventoryAlternative = (steamID) => new Promise((resolve, rejec
               if (itemPricing && item.marketable !== 0) {
                 if (marketHashName in itemPrices) {
                   if (itemPrices[marketHashName].price !== undefined && itemPrices[marketHashName].price !== null
-                    && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') { 
+                    && itemPrices[marketHashName].price !== 0 && itemPrices[marketHashName].price !== 'null') {
                     const d1 = new Date(itemPrices[marketHashName].update_date);
                     const d2 = new Date();
                     if ((Math.abs(d2 - d1) / 1000) > 86400) {
                       fetchPromises.push(getSingleItemPrice(marketHashName));
                       price = parseFloat(0);
                     } else {
-                      price = itemPrices[marketHashName].price; 
+                      price = itemPrices[marketHashName].price;
                     }
                   } else {
                     fetchPromises.push(getSingleItemPrice(marketHashName));
