@@ -5,20 +5,20 @@ const doTheSorting = (items, itemElements, method, pages, type) => {
   if (method === 'price_asc') {
     sortedElements = itemElements.sort((a, b) => {
       const priceOfA = getItemByAssetID(items, getAssetIDOfElement(a)).price !== undefined
-        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(a)).price.price)
+        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(a)).price)
         : 0.0;
       const priceOfB = getItemByAssetID(items, getAssetIDOfElement(b)).price !== undefined
-        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(b)).price.price)
+        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(b)).price)
         : 0.0;
       return priceOfA - priceOfB;
     });
   } else if (method === 'price_desc') {
     sortedElements = itemElements.sort((a, b) => {
       const priceOfA = getItemByAssetID(items, getAssetIDOfElement(a)).price !== undefined
-        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(a)).price.price)
+        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(a)).price)
         : 0.0;
       const priceOfB = getItemByAssetID(items, getAssetIDOfElement(b)).price !== undefined
-        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(b)).price.price)
+        ? parseFloat(getItemByAssetID(items, getAssetIDOfElement(b)).price)
         : 0.0;
       return priceOfB - priceOfA;
     });
