@@ -15,6 +15,21 @@
 - eg: `API_HOST = '127.0.0.1:8000'`, `API_HOST = '192.168.1.122:8001'`, etc.
 
 # Inspiration
-Yo, check it out! This project is built off of the dope [csgo-trader-extension](https://github.com/gergelyszabo94/csgo-trader-extension) made by the homie [@gergelyszabo94](https://github.com/gergelyszabo94).
+Yo, check it out! This project is built off of the amazing [csgo-trader-extension](https://github.com/gergelyszabo94/csgo-trader-extension) made by [@gergelyszabo94](https://github.com/gergelyszabo94).
 But, we've made some major changes and improvements to fit our own needs and goals.
 Big shoutout to `@gergelyszabo94` for being a genius and sharing their work with the open-source community. Much love!
+
+# Working Preview
+
+Without extension
+
+<img src="images\d_e.jpg" alt="Alt Text"  width="607" height="608">
+
+With extension
+
+<img src="images\d_e2.jpg" alt="Alt Text"  width="607" height="608">
+
+Trade Cd with extension
+
+<img src="images\d_e_trade.jpg" alt="Alt Text"  width="207" height="508">
+
