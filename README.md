@@ -35,7 +35,7 @@ Trade Cd with extension
 
 
 # Disclaimer: About Dota 2 and Its Cosmetics
-Dota 2 is a popular multiplayer online battle arena (MOBA) game developed by Valve Corporation. In Dota 2, players can customize the appearance of their heroes with various in-game cosmetic items like hero skins, terrains and others.
+Dota 2 is a popular multiplayer online battle arena (MOBA) game developed by Valve Corporation. In Dota 2, players can customize the appearance of their heroes with various in-game cosmetic items like hero skins, terrains and others. These cosmetics have some monetary values and can be sold within the steam market or traded with another person.
 Your Dota 2 "inventory" is where these cosmetic items are stored which is accessible through steam. Heres an example what the inventory looks like
 [My Inventory](https://steamcommunity.com/id/Becurial/inventory/).
 
